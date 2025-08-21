@@ -1,38 +1,654 @@
-.App {
-  text-align: center;
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* The container for the entire UI + 3D scene. */
+.car-ui-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.car-image {
+  position: absolute;
+  bottom: 80px;
+  right: 2%;
+  width: 40%;
+  height: auto;
+  max-height: 40%;
+  object-fit: contain;
+  z-index: 15;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* 3D scene behind everything. */
+.scene-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: transparent;
+}
+
+/* Music Panel - Red transparent background for visibility */
+.music-panel {
+  position: absolute;
+  top: 120px;
+  right: 150px;
+  width: 260px;
+  background-color: rgba(255, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 50, 50, 0.8);
+  border-radius: 14px;
+  padding: 20px;
+  color: #fff;
+  z-index: 110;
+}
+
+/* Google Assistant Button - Centered */
+.assistant-wrapper {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.music-panel {
+  position: absolute;
+  top: 120px;
+  right: 120px;
+  width: 260px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 20px;
+  color: #fff;
+  z-index: 110;
+}
+
+.music-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.music-controls button {
+  padding: 8px 14px;
+  background-color: #2ecc71;
+  border: none;
+  border-radius: 6px;
+  color: #1c1c1c;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.music-controls button:hover {
+  background-color: #27ae60;
+  transform: scale(1.1);
+}
+
+.round-icon img[alt="Music"] {
+  filter: invert(15%) sepia(100%) saturate(5000%) hue-rotate(350deg) brightness(110%) contrast(130%);
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.round-icon:hover img[alt="Music"] {
+  transform: scale(1.1);
+}
+
+/* Hover Effect - Glow */
+.round-icon:hover img[alt="Music"] {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(255, 50, 50, 0.8));
+}
+
+/* Center the Icon & Text */
+.round-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: rgba(255, 0, 0, 0.6);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.App-link {
-  color: #61dafb;
+/* Hover Effect */
+.round-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 50, 50, 1);
 }
 
-@keyframes App-logo-spin {
+/* Close button for panels */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-button:hover {
+  color: #ff4d4d;
+}
+
+/* Foreground UI overlay. */
+.ui-overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Bar Styling */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 0 20px;
+  position: relative;
+}
+
+.car-icon {
+  width: 42px;
+  height: auto;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 10px;
+}
+
+.temp-display {
+  font-weight: 500;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 40px;
+}
+
+/* Center - Date & Time */
+.time-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.date-time-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Top Bar Styling */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 0 20px;
+  position: relative;
+}
+
+/* Left Section - Temperature & Car Icon */
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.car-icon {
+  width: 42px;
+  height: auto;
+}
+
+.temp-display {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Center - Date & Time */
+.time-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.date-time-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Ensure top-bar contains the arrows */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.25);
+
+  padding: 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Left Arrow - Ensuring Visibility */
+.left-arrow {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.left-arrow:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.left-arrow img {
+  width: 22px;
+  height: 22px;
+  filter: brightness(1.5);
+}
+
+/* Right Arrow - Proper Alignment with Left Arrow */
+.right-arrow {
+  position: absolute;
+  right: 46px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover Effect */
+.right-arrow:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Right Arrow Image */
+.right-arrow img {
+  width: 22px;
+  height: 22px;
+  filter: brightness(1.5);
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.car-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.temp-display {
+  font-weight: 500;
+}
+
+/* Positioning inside Bottom Bar */
+.bottom-brightness {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+/* Updated Brightness Controls - No Blur */
+.brightness-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  /* No background blur */
+  padding: 5px 12px;
+  border-radius: 10px;
+}
+
+.brightness-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background 0.3s;
+}
+
+.brightness-btn img {
+  width: 22px;
+  height: 22px;
+  filter: invert(100%);
+}
+
+.brightness-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.brightness-indicator {
+  font-size: 1.2rem;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+}
+
+.battery-signal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.battery-signal img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Middle content container */
+.content-wrap {
+  flex: 1;
+  display: flex;
+  padding: 15px;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.speed-section {
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.steering-wheel-container {
+  width: 250px;
+  height: 250px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.steering-wheel {
+  width: 100%;
+  height: 100%;
+  animation: steerWheel 5s infinite alternate ease-in-out;
+}
+
+.speed-indicator {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 600;
+  font-size: 1.8rem;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Animation for steering wheel rotation */
+@keyframes steerWheel {
   from {
-    transform: rotate(0deg);
+    transform: rotate(-15deg);
   }
+
   to {
-    transform: rotate(360deg);
+    transform: rotate(15deg);
   }
+}
+
+/* Icon Grid */
+.icon-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  grid-gap: 20px;
+  align-items: start;
+  justify-items: center;
+}
+
+/* Round icons */
+.round-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s, background-color 0.3s;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.round-icon:hover {
+  transform: scale(1.08);
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.round-icon img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
+
+.round-icon span {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  justify-content: space-between;
+}
+
+
+.battery-icon img {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.8));
+}
+
+.mic-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mic-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.mic-wrapper img {
+  width: 24px;
+  height: 24px;
+}
+
+.mic-wrapper span {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.volume-container {
+  display: flex;
+  gap: 8px;
+}
+
+.volume-container img {
+  width: 26px;
+  height: 26px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Help Panel */
+.help-panel {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 320px;
+  max-height: calc(100% - 60px);
+  overflow-y: auto;
+  /* CHANGED to frosted glass style */
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px 0 0 14px;
+  padding: 20px;
+  color: #fff;
+  z-index: 100;
+}
+
+.help-panel h3 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.help-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.help-item h4 {
+  margin-bottom: 4px;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.help-item p {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  line-height: 1.3rem;
+}
+
+.help-item ul {
+  margin-left: 16px;
+  list-style-type: disc;
+}
+
+.help-button {
+  margin-right: 8px;
+  margin-bottom: 6px;
+  padding: 6px 12px;
+  background-color: #2ecc71;
+  border: none;
+  border-radius: 6px;
+  color: #1c1c1c;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.help-button:hover {
+  background-color: #27ae60;
+}
+
+/* Seat Panel */
+.seat-panel {
+  position: absolute;
+  top: 120px;
+  right: 370px;
+  width: 260px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 20px;
+  color: #fff;
+  z-index: 110;
+}
+
+.seat-panel h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.seat-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.seat-button {
+  padding: 8px 14px;
+  background-color: #2ecc71;
+  border: none;
+  border-radius: 6px;
+  color: #1c1c1c;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.seat-button:hover {
+  background-color: #27ae60;
 }
