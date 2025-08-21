@@ -1,9 +1,5 @@
 # Car-UI-Dashboard
 
-## Live Demo
-
-[Click here to view the live project](https://comforting-tulumba-3cd7a1.netlify.app/)
-
 ## Overview
 
 This project is a fully interactive Smart Car Dashboard built using React. It features real-time functionalities such as seat adjustment, music player, emergency assistance, and more.
@@ -65,6 +61,10 @@ Deploy the build folder to Netlify, Vercel, or any hosting service of your choic
 - HTML5 & CSS3
 - Node.js
 - Netlify for deployment
+
+## Live Demo
+
+[Click here to view the live project](https://comforting-tulumba-3cd7a1.netlify.app/)
 
 ## Contact
 
