@@ -31,8 +31,8 @@ This project is a fully interactive Smart Car Dashboard built using React. It fe
 
 ### Music Player Interface
 
+<img width="1918" height="910" alt="Screenshot 2025-03-20 132220" src="https://github.com/user-attachments/assets/45d7a82e-822d-49c2-b946-6f37c9a58179" />
 
-Screenshot 2025-03-20 132220
 
 ### Help & Assistance Panel
 
