@@ -19,7 +19,9 @@ This project is a fully interactive Smart Car Dashboard built using React. It fe
 
 ### Car UI Dashboard
 
-![Screenshot 2025-03-20 133526](https://github.com/user-attachments/assets/92300c8d-869b-42bd-bdd2-4687dea62032)
+
+<img width="1918" height="910" alt="Screenshot 2025-03-20 132220" src="https://github.com/user-attachments/assets/b28e04be-c073-49f3-a07d-2f69d159dc8c" />
+
 
 
 ### Seat Adjustment Feature
