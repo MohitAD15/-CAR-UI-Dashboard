@@ -1,4 +1,4 @@
-# Autonomous-Car-UI-Dashboard
+# Car-UI-Dashboard
 
 ## Live Demo
 
